@@ -1,0 +1,14 @@
+{
+  "name": "mandelbrot-set-visualizer",
+  "version": "1.0.0",
+  "description": "a wep app for exploring the Mandelbrot set",
+  "main": "./js/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Austin Sands",
+  "license": "ISC",
+  "dependencies": {
+    "three": "^0.123.0"
+  }
+}
