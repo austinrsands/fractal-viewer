@@ -61,7 +61,7 @@ const init = () => {
   scene.add(mesh);
 
   // Add event listeners
-  addEventListeners()
+  addEventListeners();
 };
 
 // Adds event listeners to window
@@ -102,19 +102,6 @@ const addEventListeners = () => {
   window.addEventListener("mousemove", (e) => {
     // Update position label
     updatePositionLabel(e.pageX, window.innerHeight - e.pageY);
-  });
-
-  // Set mouse drag start handler
-  window.addEventListener("dragstart", (e) => {
-    mouseDragPosition = new Vector2(e.pageX, window.innerHeight - e.pageY);
-  });
-
-  // Set mouse drag handler
-  window.addEventListener("drag", (e) => {
-    const offset = Vector2(e.pageX, window.innerHeight - e.pageY).sub(
-      mouseDragPosition
-    );
-    console.log(offset.x, offset.y);
   });
 };
 
