@@ -6,8 +6,8 @@ precision highp float;
 uniform vec2 u_center;
 uniform float u_scale;
 
-#define MAX_ITERATIONS 400
-#define MAX_VALUE 4.0
+#define MAX_ITERATIONS 1000
+#define MAX_VALUE 2.0
 
 vec2 complex_product(vec2 a, vec2 b) {
   return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
@@ -25,23 +25,30 @@ vec2 mandelbrot_function(vec2 z, vec2 c) {
   return complex_square(z) + c;
 }
 
-vec3 mandelbrot_color(vec2 start_z, vec2 c) {
+vec3 hsv_to_rgb(vec3 c) {
+    vec4 k = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + k.xyz) * 6.0 - k.www);
+    return c.z * mix(k.xxx, clamp(p - k.xxx, 0.0, 1.0), c.y);
+}
+
+// Returns value between 0 and 1
+float mandelbrot(vec2 start_z, vec2 c) {
   vec2 accumulator = start_z;
   int iterations = 0;
   for (int i = 0; i < MAX_ITERATIONS; i++) {
     iterations = i;
-    if (complex_magnitude(accumulator) >= MAX_VALUE) return vec3(float(iterations) / float(MAX_ITERATIONS));
+    if (complex_magnitude(accumulator) >= MAX_VALUE) return float(iterations) / float(MAX_ITERATIONS);
     accumulator = mandelbrot_function(accumulator, c);
   }
-  return vec3(0.0);
+  return 0.0;
 }
 
 void main() {
   // For some reason I need to multiply center by 1.25 but I'm not sure why
   vec2 st = (gl_FragCoord.xy - (u_center * 1.25)) * u_scale;
-
-  vec3 color = mandelbrot_color(vec2(0.0), st);
-  gl_FragColor = vec4(color, 1.0);
+  float mandelbrot_value = mandelbrot(vec2(0.0), st);
+  vec3 hsv_color = vec3(mandelbrot_value, 1.0, ceil(mandelbrot_value));
+  gl_FragColor = vec4(hsv_to_rgb(hsv_color), 1.0);
 }
 `;
 
@@ -50,4 +57,3 @@ void main() {
   gl_Position = vec4(position, 1.0);
 }
 `;
-

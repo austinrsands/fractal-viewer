@@ -9,11 +9,10 @@ import {
 } from "../node_modules/three/src/Three.js";
 import { fragmentShaderSource, vertexShaderSource } from "./shader.js";
 
-//
 const SHADER_SCALE_STEP = 1.05;
 const SHADER_START_SCALE = 0.004;
 
-let scene, camera, renderer, mesh, uniforms;
+let scene, camera, renderer, mesh, uniforms, mouseDragPosition;
 
 // Init
 const init = () => {
@@ -46,6 +45,10 @@ const init = () => {
     u_scale: { type: "f", value: SHADER_START_SCALE },
   };
 
+  // Update position and scale labels
+  updatePositionLabel(window.innerWidth / 2, window.innerHeight / 2);
+  updateScaleLabel();
+
   // Create material
   const material = new ShaderMaterial({
     uniforms: uniforms,
@@ -57,6 +60,12 @@ const init = () => {
   mesh = new Mesh(geometry, material);
   scene.add(mesh);
 
+  // Add event listeners
+  addEventListeners()
+};
+
+// Adds event listeners to window
+const addEventListeners = () => {
   // Set resize handler
   window.addEventListener("resize", () => {
     // Update Resolution Uniform
@@ -83,7 +92,47 @@ const init = () => {
     // Update center and scale
     uniforms.u_center.value = center;
     uniforms.u_scale.value *= scaleDelta;
+
+    // Update position and scale Labels
+    updatePositionLabel(e.pageX, window.innerHeight - e.pageY);
+    updateScaleLabel();
   });
+
+  // Set mouse move handler
+  window.addEventListener("mousemove", (e) => {
+    // Update position label
+    updatePositionLabel(e.pageX, window.innerHeight - e.pageY);
+  });
+
+  // Set mouse drag start handler
+  window.addEventListener("dragstart", (e) => {
+    mouseDragPosition = new Vector2(e.pageX, window.innerHeight - e.pageY);
+  });
+
+  // Set mouse drag handler
+  window.addEventListener("drag", (e) => {
+    const offset = Vector2(e.pageX, window.innerHeight - e.pageY).sub(
+      mouseDragPosition
+    );
+    console.log(offset.x, offset.y);
+  });
+};
+
+// Upates position label
+const updatePositionLabel = (rawX, rawY) => {
+  const position = new Vector2(rawX, rawY)
+    .sub(uniforms.u_center.value)
+    .multiplyScalar(uniforms.u_scale.value);
+  document.getElementById(
+    "position"
+  ).innerHTML = `Position: ${position.x} + ${position.y}i`;
+};
+
+// Updates scale label
+const updateScaleLabel = () => {
+  document.getElementById(
+    "scale"
+  ).innerHTML = `Scale: ${uniforms.u_scale.value}`;
 };
 
 // Animate
