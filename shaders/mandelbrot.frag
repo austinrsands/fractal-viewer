@@ -5,23 +5,15 @@ precision highp float;
 uniform vec2 u_center;
 uniform float u_scale;
 
-#define MAX_ITERATIONS 800
-#define MAX_VALUE 2.0
+#define MAX_ITERATIONS 400
+#define MAX_VALUE 256.0
 
-vec2 complex_product(vec2 a, vec2 b) {
-  return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
-}
-
-vec2 complex_square(vec2 a) {
-  return complex_product(a, a);
+vec2 complex_square(vec2 z) {
+  return vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y);
 }
 
 float complex_magnitude(vec2 a) {
   return length(a);
-}
-
-vec2 mandelbrot_function(vec2 z, vec2 c) {
-  return complex_square(z) + c;
 }
 
 vec3 hsv_to_rgb(vec3 c) {
@@ -32,12 +24,14 @@ vec3 hsv_to_rgb(vec3 c) {
 
 // Returns value between 0 and 1
 float mandelbrot(vec2 c) {
-  vec2 accumulator = vec2(0.0);
+  float n = 0.0;
+  vec2 z = vec2(0.0);
   for (int i = 0; i < MAX_ITERATIONS; i++) {
-    if (complex_magnitude(accumulator) >= MAX_VALUE) return float(i) / float(MAX_ITERATIONS);
-    accumulator = mandelbrot_function(accumulator, c);
+    z = complex_square(z) + c;
+    if (dot(z, z) > MAX_VALUE) break;
+    n += 1.0;
   }
-  return 0.0;
+  return (n - log2(log2(dot(z, z))) + 4.0) / float(MAX_ITERATIONS);
 }
 
 void main() {
