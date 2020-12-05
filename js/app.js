@@ -8,10 +8,11 @@ import {
   Camera,
   PlaneBufferGeometry,
 } from '../node_modules/three/src/Three.js';
-import { fragmentShaderSource, vertexShaderSource } from './shader.js';
 
 const SHADER_SCALE_STEP = 1.05;
 const SHADER_START_SCALE = 0.004;
+const SHADER_MIN_SCALE = 1.6595029454101338e-8;
+const SHADER_MAX_SCALE = 0.021013391876541776;
 
 let scene;
 let camera;
@@ -24,9 +25,10 @@ const updatePositionLabel = (rawX, rawY) => {
   const position = new Vector2(rawX, rawY)
     .sub(uniforms.u_center.value)
     .multiplyScalar(uniforms.u_scale.value);
-  document.getElementById(
-    'position',
-  ).innerHTML = `Position: ${position.x} + ${position.y}i`;
+  const isImaginaryComponentNegative = position.y < 0;
+  document.getElementById('position').innerHTML = `Position: ${position.x} ${
+    isImaginaryComponentNegative ? '-' : '+'
+  } ${isImaginaryComponentNegative ? -position.y : position.y}i`;
 };
 
 // Updates scale label
@@ -40,7 +42,7 @@ const updateScaleLabel = () => {
 const addEventListeners = () => {
   // Set resize handler
   window.addEventListener('resize', () => {
-    // Update Resolution Uniform
+    // Update resolution uniform
     uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
 
     // Update renderer
@@ -51,23 +53,26 @@ const addEventListeners = () => {
   window.addEventListener('wheel', (e) => {
     // Calculate the change in scale
     const scaleDelta = SHADER_SCALE_STEP ** Math.sign(e.deltaY);
+    const newScale = uniforms.u_scale.value * scaleDelta;
 
-    // Determine anchor point for scaling
-    const anchor = new Vector2(e.pageX, window.innerHeight - e.pageY);
+    if (newScale > SHADER_MIN_SCALE && newScale < SHADER_MAX_SCALE) {
+      // Determine anchor point for scaling
+      const anchor = new Vector2(e.pageX, window.innerHeight - e.pageY);
 
-    // Calculate new center point
-    const center = uniforms.u_center.value.clone();
-    center.sub(anchor);
-    center.multiplyScalar(1 / scaleDelta);
-    center.add(anchor);
+      // Calculate new center point
+      const center = uniforms.u_center.value.clone();
+      center.sub(anchor);
+      center.multiplyScalar(1 / scaleDelta);
+      center.add(anchor);
 
-    // Update center and scale
-    uniforms.u_center.value = center;
-    uniforms.u_scale.value *= scaleDelta;
+      // Update center and scale
+      uniforms.u_center.value = center;
+      uniforms.u_scale.value = newScale;
 
-    // Update position and scale Labels
-    updatePositionLabel(e.pageX, window.innerHeight - e.pageY);
-    updateScaleLabel();
+      // Update position and scale Labels
+      updatePositionLabel(e.pageX, window.innerHeight - e.pageY);
+      updateScaleLabel();
+    }
   });
 
   // Set mouse move handler
@@ -77,8 +82,14 @@ const addEventListeners = () => {
   });
 };
 
+// Returns string containing shader source code at given URL
+const loadShaderSource = async (url) => {
+  const response = await fetch(url);
+  return response.text();
+};
+
 // Init
-const init = () => {
+const init = async () => {
   // Create scene
   scene = new Scene();
 
@@ -115,8 +126,8 @@ const init = () => {
   // Create material
   const material = new ShaderMaterial({
     uniforms,
-    vertexShader: vertexShaderSource,
-    fragmentShader: fragmentShaderSource,
+    vertexShader: await loadShaderSource('../shaders/mandelbrot.vert'),
+    fragmentShader: await loadShaderSource('../shaders/mandelbrot.frag'),
   });
 
   // Create mesh

@@ -1,4 +1,3 @@
-export const fragmentShaderSource = `
 #ifdef GL_ES
 precision highp float;
 #endif
@@ -6,7 +5,7 @@ precision highp float;
 uniform vec2 u_center;
 uniform float u_scale;
 
-#define MAX_ITERATIONS 1000
+#define MAX_ITERATIONS 800
 #define MAX_VALUE 2.0
 
 vec2 complex_product(vec2 a, vec2 b) {
@@ -32,12 +31,10 @@ vec3 hsv_to_rgb(vec3 c) {
 }
 
 // Returns value between 0 and 1
-float mandelbrot(vec2 start_z, vec2 c) {
-  vec2 accumulator = start_z;
-  int iterations = 0;
+float mandelbrot(vec2 c) {
+  vec2 accumulator = vec2(0.0);
   for (int i = 0; i < MAX_ITERATIONS; i++) {
-    iterations = i;
-    if (complex_magnitude(accumulator) >= MAX_VALUE) return float(iterations) / float(MAX_ITERATIONS);
+    if (complex_magnitude(accumulator) >= MAX_VALUE) return float(i) / float(MAX_ITERATIONS);
     accumulator = mandelbrot_function(accumulator, c);
   }
   return 0.0;
@@ -46,14 +43,7 @@ float mandelbrot(vec2 start_z, vec2 c) {
 void main() {
   // For some reason I need to multiply center by 1.25 but I'm not sure why
   vec2 st = (gl_FragCoord.xy - (u_center * 1.25)) * u_scale;
-  float mandelbrot_value = mandelbrot(vec2(0.0), st);
+  float mandelbrot_value = mandelbrot(st);
   vec3 hsv_color = vec3(mandelbrot_value, 1.0, ceil(mandelbrot_value));
   gl_FragColor = vec4(hsv_to_rgb(hsv_color), 1.0);
 }
-`;
-
-export const vertexShaderSource = `
-void main() {
-  gl_Position = vec4(position, 1.0);
-}
-`;
