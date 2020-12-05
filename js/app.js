@@ -20,7 +20,7 @@ let renderer;
 let mesh;
 let uniforms;
 
-// Upates position label
+// Updates position label
 const updatePositionLabel = (rawX, rawY) => {
   const position = new Vector2(rawX, rawY)
     .sub(uniforms.u_center.value)
