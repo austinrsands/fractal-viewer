@@ -1,8 +1,9 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: './src/scripts/index.js',
+  entry: path.join(__dirname, '/src/scripts/index.js'),
   module: {
     rules: [
       {
@@ -33,8 +34,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/markup/index.html',
-      favicon: './src/media/favicon.ico',
+      template: path.join(__dirname, '/src/markup/index.html'),
+      favicon: path.join(__dirname, '/src/media/favicon.ico'),
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
