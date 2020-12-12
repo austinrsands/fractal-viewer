@@ -6,14 +6,10 @@ uniform vec2 u_center;
 uniform float u_scale;
 
 #define MAX_ITERATIONS 400
-#define MAX_VALUE 256.0
+#define MAX_VALUE 4.0
 
 vec2 complex_square(vec2 z) {
   return vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y);
-}
-
-float complex_magnitude(vec2 a) {
-  return length(a);
 }
 
 vec3 hsv_to_rgb(vec3 c) {
@@ -38,6 +34,6 @@ void main() {
   // For some reason I need to multiply center by 1.25 but I'm not sure why
   vec2 st = (gl_FragCoord.xy - (u_center * 1.25)) * u_scale;
   float mandelbrot_value = mandelbrot(st);
-  vec3 hsv_color = vec3(mandelbrot_value, 1.0, ceil(mandelbrot_value));
+  vec3 hsv_color = vec3(mandelbrot_value, 1.0, 1.0);
   gl_FragColor = vec4(hsv_to_rgb(hsv_color), 1.0);
 }

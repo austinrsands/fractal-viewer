@@ -14,9 +14,10 @@ const vertexShader = require('../shaders/vertex.glsl');
 const fragmentShader = require('../shaders/fragment.glsl');
 
 const SHADER_SCALE_STEP = 1.05;
-const SHADER_START_SCALE = 0.004;
+const SHADER_START_SCALE = 0.002;
 const SHADER_MIN_SCALE = 1.6595029454101338e-8;
 const SHADER_MAX_SCALE = 0.021013391876541776;
+const FRAME_RATE = 60;
 
 let scene;
 let camera;
@@ -144,7 +145,9 @@ const render = () => {
 
 // Animate
 const animate = () => {
-  requestAnimationFrame(animate);
+  setTimeout(() => {
+    requestAnimationFrame(animate);
+  }, 1000 / FRAME_RATE);
   render();
 };
 
