@@ -1,4 +1,5 @@
 /* eslint-disable import/extensions */
+import '../styles/styles.css';
 import {
   Scene,
   WebGLRenderer,
@@ -8,10 +9,9 @@ import {
   Camera,
   PlaneBufferGeometry,
 } from 'three';
-import '../styles/styles.css';
 
-const vertexShader = require('../shaders/vertex.glsl');
-const fragmentShader = require('../shaders/fragment.glsl');
+import vertexShader from '../shaders/vertex.glsl';
+import fragmentShader from '../shaders/fragment.glsl';
 
 const SHADER_SCALE_STEP = 1.05;
 const SHADER_START_SCALE = 0.002;
