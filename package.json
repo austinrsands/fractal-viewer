@@ -1,5 +1,5 @@
 {
-  "name": "mandelbrot-set-visualizer",
+  "name": "mandelbrot-set",
   "version": "1.0.0",
   "description": "a wep app for exploring the Mandelbrot set",
   "private": true,
