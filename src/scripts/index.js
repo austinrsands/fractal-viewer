@@ -7,7 +7,11 @@ import {
   Vector2,
   Camera,
   PlaneBufferGeometry,
-} from '../node_modules/three/src/Three.js';
+} from 'three';
+import '../styles/styles.css';
+
+const vertexShader = require('../shaders/vertex.glsl');
+const fragmentShader = require('../shaders/fragment.glsl');
 
 const SHADER_SCALE_STEP = 1.05;
 const SHADER_START_SCALE = 0.004;
@@ -82,12 +86,6 @@ const addEventListeners = () => {
   });
 };
 
-// Returns string containing shader source code at given URL
-const loadShaderSource = async (url) => {
-  const response = await fetch(url);
-  return response.text();
-};
-
 // Init
 const init = async () => {
   // Create scene
@@ -126,8 +124,8 @@ const init = async () => {
   // Create material
   const material = new ShaderMaterial({
     uniforms,
-    vertexShader: await loadShaderSource('../shaders/mandelbrot.vert'),
-    fragmentShader: await loadShaderSource('../shaders/mandelbrot.frag'),
+    vertexShader,
+    fragmentShader,
   });
 
   // Create mesh
