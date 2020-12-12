@@ -14,7 +14,7 @@ import vertexShader from '../shaders/vertex.glsl';
 import fragmentShader from '../shaders/fragment.glsl';
 
 const SHADER_SCALE_STEP = 1.05;
-const SHADER_START_SCALE = 0.002;
+const SHADER_START_SCALE = 0.004;
 const SHADER_MIN_SCALE = 1.6595029454101338e-8;
 const SHADER_MAX_SCALE = 0.021013391876541776;
 const FRAME_RATE = 60;
@@ -98,7 +98,10 @@ const init = async () => {
 
   // Create renderer
   renderer = new WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
+
+  // This causes weird scaling of coordinates for shader
+  // renderer.setPixelRatio(window.devicePixelRatio);
+
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 

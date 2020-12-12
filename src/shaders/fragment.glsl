@@ -31,8 +31,7 @@ float mandelbrot(vec2 c) {
 }
 
 void main() {
-  // For some reason I need to multiply center by 1.25 but I'm not sure why
-  vec2 st = (gl_FragCoord.xy - (u_center * 1.25)) * u_scale;
+  vec2 st = (gl_FragCoord.xy - u_center) * u_scale;
   float mandelbrot_value = mandelbrot(st);
   vec3 hsv_color = vec3(mandelbrot_value, 1.0, 1.0);
   gl_FragColor = vec4(hsv_to_rgb(hsv_color), 1.0);
