@@ -4,8 +4,8 @@
   "description": "a wep app for exploring the Mandelbrot set",
   "private": true,
   "scripts": {
-    "dev": "parcel ./src/markup/index.html",
-    "build": "parcel build ./src/markup/index.html"
+    "start": "parcel ./src/markup/index.html --open",
+    "build": "parcel build ./src/markup/index.html --no-source-maps"
   },
   "author": "Austin Sands",
   "license": "ISC",
