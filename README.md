@@ -1,5 +1,5 @@
 # fractal-viewer
-a wep app for exploring the Mandelbrot set
+a web app for exploring the Mandelbrot set
 
 
 ## Demo
