@@ -1,7 +1,7 @@
 {
   "name": "fractal-viewer",
   "version": "1.0.0",
-  "description": "a wep app for exploring the Mandelbrot set",
+  "description": "a web app for exploring the Mandelbrot set",
   "repository": "https://github.com/austinrsands/mandelbrot-set",
   "private": true,
   "homepage": "https://austinrsands.github.io/mandelbrot-set/",
