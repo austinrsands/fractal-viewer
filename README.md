@@ -1,8 +1,10 @@
 ![screenshot](demo.jpg)
-# fractal-viewer
+# Fractal Viewer
+
 Fractal Viewer is a web app for visualizing the Mandelbrot set in the complex plane at various positions and scales.
 
 ## Demo
+
 View the live site [here](https://austinrsands.github.io/fractal-viewer/).
 
 ## Prerequisites
